@@ -1,0 +1,78 @@
+{% extends 'results_system/base.html' %}
+{% load static %}
+
+{% block title %}All Students — KCA University Results{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <div class="page-header-content">
+        <h1 class="page-title">All Students</h1>
+        <p class="page-subtitle">Complete list of enrolled students</p>
+    </div>
+    <div class="page-header-actions">
+        <a href="{% url 'results_system:dashboard' %}" class="btn btn-outline">← Back to Search</a>
+    </div>
+</div>
+
+<div class="container">
+    <div class="table-card">
+        <div class="table-header">
+            <h2 class="table-title">Student Registry</h2>
+            <span class="badge">{{ students|length }} students</span>
+        </div>
+        <div class="table-wrapper">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Reg. Number</th>
+                        <th>Full Name</th>
+                        <th>Program</th>
+                        <th>Faculty</th>
+                        <th>Year</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in students %}
+                    <tr>
+                        <td><span class="reg-number">{{ student.registration_number }}</span></td>
+                        <td>
+                            <div class="table-student">
+                                <div class="table-avatar">
+                                    {% if student.photo %}
+                                    <img src="{{ student.photo.url }}" alt="{{ student.full_name }}"
+                                        class="avatar-img-sm">
+                                    {% else %}
+                                    <div class="avatar-placeholder-sm">{{ student.first_name.0 }}{{ student.last_name.0
+                                        }}</div>
+                                    {% endif %}
+                                </div>
+                                <span>{{ student.full_name }}</span>
+                            </div>
+                        </td>
+                        <td>{{ student.program.name }}</td>
+                        <td>{{ student.program.faculty.code }}</td>
+                        <td><span class="year-badge">Year {{ student.year_of_study }}</span></td>
+                        <td class="email-cell">{{ student.email }}</td>
+                        <td>
+                            <a href="{% url 'results_system:result_slip' student.registration_number %}"
+                                class="btn btn-sm btn-primary">View Slip</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="empty-row">
+                            <div class="empty-state-sm">
+                                <p>No students found. <a href="/admin/results_system/student/add/">Add a student</a> in
+                                    the admin panel.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

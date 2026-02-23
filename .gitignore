@@ -1,0 +1,46 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.sln.docstates
+
+# Visual Studio Code
+.vscode/
+
+# C++ Build Output
+*.exe
+*.obj
+*.ilk
+*.pdb
+*.o
+*.out
+*.dat
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+.env
+db.sqlite3
+*.db
+
+# C# / .NET
+bin/
+obj/
+packages/
+*.user
+*.userprefs
+*.pidb
+*.suo
+
+# Compressed Files
+*.zip
+*.7z
+*.rar
+*.tar.gz
+
+# Logs and OS
+*.log
+Thumbs.db
+.DS_Store
