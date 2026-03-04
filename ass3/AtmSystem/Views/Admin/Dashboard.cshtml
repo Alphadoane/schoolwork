@@ -1,0 +1,98 @@
+@model AtmSystem.Controllers.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container mt-4">
+    <h2>Admin Management Dashboard</h2>
+    <hr />
+
+    <ul class="nav nav-tabs" id="adminTab" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" id="accounts-tab" data-bs-toggle="tab" data-bs-target="#accounts" type="button">Accounts</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="cards-tab" data-bs-toggle="tab" data-bs-target="#cards" type="button">Cards</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" id="atms-tab" data-bs-toggle="tab" data-bs-target="#atms" type="button">ATM Machines</button>
+        </li>
+    </ul>
+
+    <div class="tab-content border-start border-end border-bottom p-3" id="adminTabContent">
+        <div class="tab-pane fade show active" id="accounts" role="tabpanel">
+            <h4>Customer Accounts</h4>
+            <table class="table table-sm table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Acc No</th>
+                        <th>Holder</th>
+                        <th>Balance</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var acc in Model.Accounts!)
+                    {
+                        <tr>
+                            <td>@acc.AccountNumber</td>
+                            <td>@acc.HolderName</td>
+                            <td>KES @acc.Balance.ToString("N2")</td>
+                            <td>@acc.AccountType</td>
+                            <td><span class="badge @(acc.Status == "Active" ? "bg-success" : "bg-warning")">@acc.Status</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="cards" role="tabpanel">
+            <h4>Active Cards</h4>
+            <table class="table table-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Card Number</th>
+                        <th>Account</th>
+                        <th>Expiry</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var card in Model.Cards!)
+                    {
+                        <tr>
+                            <td>@card.CardNumber</td>
+                            <td>@card.Account?.HolderName</td>
+                            <td>@card.ExpiryDate</td>
+                            <td>@(card.IsActive ? "Active" : "Disabled")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="atms" role="tabpanel">
+            <h4>ATM Machine Network</h4>
+            <table class="table table-sm">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Location</th>
+                        <th>Cash Avail</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var atm in Model.AtmMachines!)
+                    {
+                        <tr>
+                            <td>@atm.MachineId</td>
+                            <td>@atm.Location</td>
+                            <td>KES @atm.CashAvailable.ToString("N2")</td>
+                            <td>@atm.Status</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

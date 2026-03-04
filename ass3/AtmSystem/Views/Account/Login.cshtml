@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Account Login";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card mt-5">
+            <div class="card-header bg-primary text-white text-center">
+                <h2>ATM Login</h2>
+            </div>
+            <div class="card-body">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger">@ViewBag.Error</div>
+                }
+                <form asp-action="Login" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Card Number</label>
+                        <input type="text" name="cardNumber" class="form-control" required maxlength="16" placeholder="16-digit card number" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">PIN</label>
+                        <input type="password" name="pin" class="form-control" required maxlength="4" placeholder="4-digit PIN" />
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

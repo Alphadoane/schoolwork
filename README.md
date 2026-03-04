@@ -1,30 +1,45 @@
-# Advance App Course Work
+# Advance App Course Work (C# Workspace)
 
-This repository contains various programming assignments and projects for the Advance App Course Work.
+This repository contains various programming assignments and projects for the Advance App Course Work. All projects have been converted to **C# (.NET 8/10)** to ensure a unified development environment.
 
 ## Contents
 
 ### Assignments
-- [assn1](file:///assn1): C++ implementations for Library Book Management and Vehicle Sales systems.
-- [assn2](file:///assn2): C# console applications for Electronic Voting, Safaricom Bonga Points, and Employee Management.
-- [ass3](file:///ass3): Python Flask-based ATM Management System.
+- **[assn1](file:///c:/Users/Administrator/Desktop/advance%20app%20course%20work/assn1)**: C# Console Applications.
+  - **Question 1**: Booker University Library Book Management System (Binary file storage).
+  - **Question 2**: DT Dobie (K) Ltd Vehicle Sales System (Binary file storage).
+- **[assn2](file:///c:/Users/Administrator/Desktop/advance%20app%20course%20work/assn2)**: C# Console Applications for Electronic Voting, Safaricom Bonga Points, and Employee Management.
+- **[ass3](file:///c:/Users/Administrator/Desktop/advance%20app%20course%20work/ass3)**: ASP.NET Core MVC-based ATM Management System (SQLite).
 
 ### Continuous Assessment Tests (CATs)
-- [cat 2](file:///cat%202): Python Django-based Student Result Slip Management System.
+- **[cat 2](file:///c:/Users/Administrator/Desktop/advance%20app%20course%20work/cat%202)**: ASP.NET Core MVC-based Student Result Slip Management System (SQLite).
 
 ## How to Run
 
-For convenience, several launch scripts have been created in the root directory. Simply double-click them from the Windows GUI to start the projects:
+### 1. Prerequisites
+- **.NET SDK** (v8.0 or later) must be installed.
 
-- **[run_assn1.bat](file:///run_assn1.bat)**: Launch C++ console projects.
-- **[run_assn2.bat](file:///run_assn2.bat)**: Launch C# console projects.
-- **[run_ass3.bat](file:///run_ass3.bat)**: Launch the Flask ATM Management System (automatically opens browser).
-- **[run_cat2.bat](file:///run_cat2.bat)**: Launch the Django Result Slip Management System (automatically opens browser).
+### 2. Launch Scripts
+For convenience, launch scripts are provided in the root directory. Double-click them to start the projects:
 
-> [!NOTE]
-> Web applications (Flask/Django) require Python to be installed and available in your PATH.
+- **[run_assn1.bat](file:///c:/Users/Administrator/Desktop/advance%20app%20course%20work/run_assn1.bat)**: Launch C# console projects for Assignment 1.
+- **[run_assn2.bat](file:///c:/Users/Administrator/Desktop/advance%20app%20course%20work/run_assn2.bat)**: Launch C# console projects for Assignment 2.
+- **[run_ass3.bat](file:///c:/Users/Administrator/Desktop/advance%20app%20course%20work/run_ass3.bat)**: Start the ATM Management Web Application.
+- **[run_cat2.bat](file:///c:/Users/Administrator/Desktop/advance%20app%20course%20work/run_cat2.bat)**: Start the Student Result Slip Web Application.
 
-## Project Types
-- **C++**: Console applications with file-based persistence.
-- **C#**: Console applications using SQLite for data storage.
-- **Python**: Web applications using Flask and Django frameworks.
+## Web Application Details
+
+### ATM Management System (ass3)
+- **Demo Customers**:
+  - Alice: Card `1234567890123456`, PIN `1234`
+  - Bob: Card `2345678901234567`, PIN `2345`
+- **Admin**: Username `admin`, Password `admin123`
+
+### Student Results System (cat 2)
+- Search for students by **Registration Number** (e.g., `BIT/001/2022`) or **Name** to view academic result slips and GPA tracking.
+
+## Technologies Used
+- **Language**: C# 12
+- **Frameworks**: .NET 8/10, ASP.NET Core MVC
+- **Data Storage**: SQLite (Web), Binary Flat Files (Console)
+- **ORM**: Entity Framework Core

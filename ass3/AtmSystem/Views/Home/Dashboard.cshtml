@@ -1,0 +1,48 @@
+@model AtmSystem.Models.Account
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card bg-light">
+                <div class="card-body text-center">
+                    <h5>Welcome, @Model.HolderName</h5>
+                    <hr />
+                    <p>Account Number: <strong>@Model.AccountNumber</strong></p>
+                    <p>Account Type: <strong>@Model.AccountType</strong></p>
+                    <h3 class="text-success">Balance: KES @Model.Balance.ToString("N2")</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">Recent Transactions</div>
+                <div class="card-body">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tx in Model.Transactions.OrderByDescending(t => t.Timestamp))
+                            {
+                                <tr>
+                                    <td>@tx.Timestamp.ToString("g")</td>
+                                    <td>@tx.Type</td>
+                                    <td>KES @tx.Amount.ToString("N2")</td>
+                                    <td>@tx.Description</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
