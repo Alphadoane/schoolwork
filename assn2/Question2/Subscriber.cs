@@ -42,9 +42,18 @@ namespace BongaPoints
         public void DisplayInfo()
         {
             int points = compute_bonuspoints();
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
-            Console.WriteLine("  " + Name.ToUpper() + " :(PHONE NO:" + PhoneNumber + "): AWARDED " + points + " BONGA POINTS.");
-            Console.WriteLine("  STAY WITH SAFARICOM. THE BETTER OPTION!");
+            Console.WriteLine("  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            Console.WriteLine("  ┃        SAFARICOM BONGA POINTS RECORD             ┃");
+            Console.WriteLine("  ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫");
+            Console.WriteLine(string.Format("  ┃  Name   : {0,-35}┃", Name.ToUpper()));
+            Console.WriteLine(string.Format("  ┃  Phone  : {0,-35}┃", PhoneNumber));
+            Console.WriteLine(string.Format("  ┃  Points : {0,-35}┃", points));
+            Console.WriteLine("  ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫");
+            Console.WriteLine("  ┃  STAY WITH SAFARICOM. THE BETTER OPTION!         ┃");
+            Console.WriteLine("  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+            Console.ResetColor();
             Console.WriteLine();
         }
     }

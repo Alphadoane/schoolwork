@@ -35,19 +35,21 @@ namespace EVMS
         // ── Display Method ───────────────────────────────────────────────────────
         public void DisplayVoter()
         {
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
-            Console.WriteLine("╔══════════════════════════════════════════════════╗");
-            Console.WriteLine("║          VOTER DETAILS – IIEC EVMS               ║");
-            Console.WriteLine("╠══════════════════════════════════════════════════╣");
-            Console.WriteLine(string.Format("║  Voter Card ID    : {0,-29}║", VoterCardID));
-            Console.WriteLine(string.Format("║  National ID      : {0,-29}║", NationalID));
-            Console.WriteLine(string.Format("║  First Name       : {0,-29}║", FirstName));
-            Console.WriteLine(string.Format("║  Middle Name      : {0,-29}║", MiddleName));
-            Console.WriteLine(string.Format("║  Surname          : {0,-29}║", Surname));
-            Console.WriteLine(string.Format("║  Polling Station  : {0,-29}║", PollingStation));
-            Console.WriteLine(string.Format("║  Date of Birth    : {0,-29}║", DateOfBirth));
-            Console.WriteLine(string.Format("║  Gender           : {0,-29}║", Gender));
-            Console.WriteLine("╚══════════════════════════════════════════════════╝");
+            Console.WriteLine("  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            Console.WriteLine("  ┃          VOTER DETAILS – IIEC EVMS               ┃");
+            Console.WriteLine("  ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫");
+            Console.WriteLine(string.Format("  ┃  Voter Card ID    : {0,-29}┃", VoterCardID));
+            Console.WriteLine(string.Format("  ┃  National ID      : {0,-29}┃", NationalID));
+            Console.WriteLine(string.Format("  ┃  First Name       : {0,-29}┃", FirstName));
+            Console.WriteLine(string.Format("  ┃  Middle Name      : {0,-29}┃", MiddleName));
+            Console.WriteLine(string.Format("  ┃  Surname          : {0,-29}┃", Surname));
+            Console.WriteLine(string.Format("  ┃  Polling Station  : {0,-29}┃", PollingStation));
+            Console.WriteLine(string.Format("  ┃  Date of Birth    : {0,-29}┃", DateOfBirth));
+            Console.WriteLine(string.Format("  ┃  Gender           : {0,-29}┃", Gender));
+            Console.WriteLine("  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+            Console.ResetColor();
         }
     }
 }

@@ -9,37 +9,57 @@
         <p class="lead">Search for student results slips</p>
     </div>
 
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <form asp-action="Dashboard" method="get" class="mb-4">
-                <div class="input-group input-group-lg shadow-sm">
-                    <input type="text" name="q" value="@ViewBag.Query" class="form-control" placeholder="Search by Registration Number or Name..." />
-                    <button class="btn btn-primary" type="submit">Search</button>
-                </div>
-            </form>
-
-            @if (Model != null && Model.Any())
-            {
-                <div class="card shadow-sm">
-                    <div class="card-header bg-light">Search Results</div>
-                    <ul class="list-group list-group-flush">
-                        @foreach (var student in Model)
-                        {
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>@student.FullName</strong> <br />
-                                    <small class="text-muted">@student.RegistrationNumber - @student.Program?.Name</small>
-                                </div>
-                                <a asp-action="ResultSlip" asp-route-regNumber="@student.RegistrationNumber" class="btn btn-outline-primary btn-sm">View Result Slip</a>
-                            </li>
-                        }
-                    </ul>
-                </div>
-            }
-            else if (!string.IsNullOrEmpty(ViewBag.Query))
-            {
-                <div class="alert alert-info">No students found matching "@ViewBag.Query"</div>
-            }
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-indigo">Student Portal</h1>
+            <p class="text-muted">Access and download your academic transcripts</p>
         </div>
+
+        <div class="card bg-white border-0 shadow-sm mb-5">
+            <div class="card-body p-4">
+                <form asp-action="Dashboard" method="get">
+                    <div class="input-group input-group-lg border rounded-3 overflow-hidden">
+                        <span class="input-group-text bg-white border-0"><i class="bi bi-search"></i></span>
+                        <input type="text" name="q" value="@ViewBag.Query" class="form-control border-0" placeholder="Search by Reg Number (e.g. BIT/001/2022) or Name" />
+                        <button class="btn btn-indigo px-5" type="submit">SEARCH</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        @if (Model != null && Model.Any())
+        {
+            <div class="row g-4">
+                @foreach (var student in Model)
+                {
+                    <div class="col-md-6">
+                        <div class="card h-100 border-0 shadow-sm hover-lift">
+                            <div class="card-body d-flex align-items-center">
+                                <div class="flex-shrink-0 bg-indigo text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px; font-weight: 700;">
+                                    @student.FirstName[0]@student.LastName[0]
+                                </div>
+                                <div class="ms-3 flex-grow-1">
+                                    <h5 class="mb-1 fw-bold">@student.FullName</h5>
+                                    <p class="text-muted small mb-0">@student.RegistrationNumber</p>
+                                    <p class="text-indigo small fw-semibold mb-0">@student.Program?.Name</p>
+                                </div>
+                                <div class="ms-2">
+                                    <a asp-action="ResultSlip" asp-route-regNumber="@student.RegistrationNumber" class="btn btn-sm btn-outline-indigo rounded-pill px-3">View Slip</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        else if (!string.IsNullOrEmpty(ViewBag.Query))
+        {
+            <div class="alert alert-light border text-center p-5">
+                <p class="h5 text-muted mb-0">No records found for "@ViewBag.Query"</p>
+                <small class="text-muted">Try searching with a different registration number or name.</small>
+            </div>
+        }
     </div>
+</div>
 </div>

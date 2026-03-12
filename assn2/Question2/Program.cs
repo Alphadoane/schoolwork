@@ -47,15 +47,17 @@ namespace BongaPoints
 
         static void PrintMenu()
         {
+            Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine();
-            Console.WriteLine("  ╔══════════════════════════════════════════════════╗");
-            Console.WriteLine("  ║   SAFARICOM – Electronic Reward System           ║");
-            Console.WriteLine("  ╠══════════════════════════════════════════════════╣");
-            Console.WriteLine("  ║  1. Add Subscriber & Compute Bonga Points        ║");
-            Console.WriteLine("  ║  2. Display All Subscribers                      ║");
-            Console.WriteLine("  ║  3. Exit                                         ║");
-            Console.WriteLine("  ╚══════════════════════════════════════════════════╝");
-            Console.Write("  Enter option: ");
+            Console.WriteLine("  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            Console.WriteLine("  ┃   SAFARICOM – ELECTRONIC REWARD SYSTEM           ┃");
+            Console.WriteLine("  ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫");
+            Console.WriteLine("  ┃  1. ➕ Add Subscriber & Compute Points          ┃");
+            Console.WriteLine("  ┃  2. 📋 Display All Subscribers                  ┃");
+            Console.WriteLine("  ┃  3. ❌ Exit                                     ┃");
+            Console.WriteLine("  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+            Console.ResetColor();
+            Console.Write("  Choice [1-3]: ");
         }
 
         static void AddSubscriber(SubscriberDatabase db)

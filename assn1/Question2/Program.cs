@@ -2,17 +2,36 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Data.SQLite;
 
 namespace Question2
 {
     class Vehicle
     {
         private const double PROFIT_RATE = 0.15;
+        private static string _connectionString = "Data Source=vehicles.db;Version=3;";
 
         public string Make { get; set; } = string.Empty;
         public string Model { get; set; } = string.Empty;
         public string EngineNumber { get; set; } = string.Empty;
         public double SalePrice { get; set; }
+
+        public static void InitializeDatabase()
+        {
+            using (var conn = new SQLiteConnection(_connectionString))
+            {
+                conn.Open();
+                string sql = @"
+                    CREATE TABLE IF NOT EXISTS Vehicles (
+                        EngineNumber TEXT PRIMARY KEY,
+                        Make TEXT NOT NULL,
+                        Model TEXT NOT NULL,
+                        SalePrice REAL NOT NULL
+                    );";
+                using (var cmd = new SQLiteCommand(sql, conn))
+                    cmd.ExecuteNonQuery();
+            }
+        }
 
         public void SetVehicle()
         {
@@ -36,15 +55,20 @@ namespace Question2
         {
             try
             {
-                using (FileStream fs = new FileStream("vehicles.dat", FileMode.Append, FileAccess.Write))
-                using (BinaryWriter writer = new BinaryWriter(fs))
+                using (var conn = new SQLiteConnection(_connectionString))
                 {
-                    writer.Write(Make.PadRight(30).ToCharArray());
-                    writer.Write(Model.PadRight(30).ToCharArray());
-                    writer.Write(EngineNumber.PadRight(20).ToCharArray());
-                    writer.Write(SalePrice);
+                    conn.Open();
+                    string sql = "INSERT OR REPLACE INTO Vehicles (EngineNumber, Make, Model, SalePrice) VALUES (@id, @make, @model, @price)";
+                    using (var cmd = new SQLiteCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", EngineNumber);
+                        cmd.Parameters.AddWithValue("@make", Make);
+                        cmd.Parameters.AddWithValue("@model", Model);
+                        cmd.Parameters.AddWithValue("@price", SalePrice);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
-                Console.WriteLine("  [OK] Vehicle record saved to database.");
+                Console.WriteLine("  [OK] Vehicle record saved to SQLite database.");
             }
             catch (Exception ex)
             {
@@ -54,40 +78,39 @@ namespace Question2
 
         public static void DisplayAll()
         {
-            if (!File.Exists("vehicles.dat"))
-            {
-                Console.WriteLine("\n  [INFO] No records found. Database is empty.");
-                return;
-            }
-
             try
             {
-                using (FileStream fs = new FileStream("vehicles.dat", FileMode.Open, FileAccess.Read))
-                using (BinaryReader reader = new BinaryReader(fs))
+                using (var conn = new SQLiteConnection(_connectionString))
                 {
-                    Console.WriteLine("\n=== DT Dobie (K) Ltd – Vehicle Sales Database ===");
-                    Console.WriteLine($"{"Make",-15} {"Model",-15} {"Engine No.",-20} {"Sale Price (KES)",-18} {"Profit (KES)",-18}");
-                    Console.WriteLine(new string('-', 86));
-
-                    int count = 0;
-                    while (fs.Position < fs.Length)
+                    conn.Open();
+                    string sql = "SELECT * FROM Vehicles";
+                    using (var cmd = new SQLiteCommand(sql, conn))
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        string make = new string(reader.ReadChars(30)).TrimEnd();
-                        string model = new string(reader.ReadChars(30)).TrimEnd();
-                        string engineNumber = new string(reader.ReadChars(20)).TrimEnd();
-                        double salePrice = reader.ReadDouble();
-                        double profit = salePrice * PROFIT_RATE;
-
-                        Console.WriteLine($"{make,-15} {model,-15} {engineNumber,-20} {salePrice,-18:F2} {profit,-18:F2}");
-                        count++;
-                    }
-
-                    if (count == 0)
-                        Console.WriteLine("  [INFO] No records found.");
-                    else
-                    {
+                        Console.WriteLine("\n=== DT Dobie (K) Ltd – Vehicle Sales Database (SQLite) ===");
+                        Console.WriteLine($"{"Make",-15} {"Model",-15} {"Engine No.",-20} {"Sale Price (KES)",-18} {"Profit (KES)",-18}");
                         Console.WriteLine(new string('-', 86));
-                        Console.WriteLine($"  Total vehicles: {count}");
+
+                        int count = 0;
+                        while (reader.Read())
+                        {
+                            string engineNumber = reader["EngineNumber"].ToString()?.Trim() ?? "";
+                            string make = reader["Make"].ToString()?.Trim() ?? "";
+                            string model = reader["Model"].ToString()?.Trim() ?? "";
+                            double salePrice = Convert.ToDouble(reader["SalePrice"]);
+                            double profit = salePrice * PROFIT_RATE;
+
+                            Console.WriteLine($"{make,-15} {model,-15} {engineNumber,-20} {salePrice,-18:F2} {profit,-18:F2}");
+                            count++;
+                        }
+
+                        if (count == 0)
+                            Console.WriteLine("  [INFO] No records found.");
+                        else
+                        {
+                            Console.WriteLine(new string('-', 86));
+                            Console.WriteLine($"  Total vehicles: {count}");
+                        }
                     }
                 }
             }
@@ -103,6 +126,8 @@ namespace Question2
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            Vehicle.InitializeDatabase();
+
             Console.WriteLine("╔══════════════════════════════════════╗");
             Console.WriteLine("║   DT Dobie (K) Ltd – Vehicle Sales   ║");
             Console.WriteLine("╚══════════════════════════════════════╝");

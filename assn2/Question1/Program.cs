@@ -53,17 +53,19 @@ namespace EVMS
 
         static void PrintMenu()
         {
+            Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine();
-            Console.WriteLine("  ╔══════════════════════════════════════════════════╗");
-            Console.WriteLine("  ║   IIEC – Electronic Voting Management System     ║");
-            Console.WriteLine("  ╠══════════════════════════════════════════════════╣");
-            Console.WriteLine("  ║  1. Add New Voter                                ║");
-            Console.WriteLine("  ║  2. Delete Voter                                 ║");
-            Console.WriteLine("  ║  3. Display Voter Details                        ║");
-            Console.WriteLine("  ║  4. Display All Voters                           ║");
-            Console.WriteLine("  ║  5. Exit                                         ║");
-            Console.WriteLine("  ╚══════════════════════════════════════════════════╝");
-            Console.Write("  Enter option: ");
+            Console.WriteLine("  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            Console.WriteLine("  ┃   IIEC – ELECTRONIC VOTING MANAGEMENT SYSTEM     ┃");
+            Console.WriteLine("  ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫");
+            Console.WriteLine("  ┃  1. 👤 Add New Voter                            ┃");
+            Console.WriteLine("  ┃  2. 🗑️ Delete Voter                             ┃");
+            Console.WriteLine("  ┃  3. 🔍 Display Voter Details                    ┃");
+            Console.WriteLine("  ┃  4. 📋 Display All Voters                       ┃");
+            Console.WriteLine("  ┃  5. ❌ Exit                                     ┃");
+            Console.WriteLine("  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+            Console.ResetColor();
+            Console.Write("  Select Option [1-5]: ");
         }
 
         static void AddVoter(VoterDatabase db)

@@ -1,17 +1,38 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Data.SQLite;
 
 namespace Question1
 {
     class Book
     {
+        private static string _connectionString = "Data Source=books.db;Version=3;";
+
         public string Author { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public string BookNumber { get; set; } = string.Empty;
         public double Price { get; set; }
         public int Copies { get; set; }
+
+        public static void InitializeDatabase()
+        {
+            using (var conn = new SQLiteConnection(_connectionString))
+            {
+                conn.Open();
+                string sql = @"
+                    CREATE TABLE IF NOT EXISTS Books (
+                        BookNumber TEXT PRIMARY KEY,
+                        Author TEXT NOT NULL,
+                        Title TEXT NOT NULL,
+                        Price REAL NOT NULL,
+                        Copies INTEGER NOT NULL
+                    );";
+                using (var cmd = new SQLiteCommand(sql, conn))
+                    cmd.ExecuteNonQuery();
+            }
+        }
 
         public void Insert()
         {
@@ -27,19 +48,23 @@ namespace Question1
             Console.Write("  Copies      : ");
             if (int.TryParse(Console.ReadLine(), out int c)) Copies = c;
 
-            // Append record to binary file
             try
             {
-                using (FileStream fs = new FileStream("books.dat", FileMode.Append, FileAccess.Write))
-                using (BinaryWriter writer = new BinaryWriter(fs))
+                using (var conn = new SQLiteConnection(_connectionString))
                 {
-                    writer.Write(Author.PadRight(50).ToCharArray());
-                    writer.Write(Title.PadRight(100).ToCharArray());
-                    writer.Write(BookNumber.PadRight(20).ToCharArray());
-                    writer.Write(Price);
-                    writer.Write(Copies);
+                    conn.Open();
+                    string sql = "INSERT OR REPLACE INTO Books (BookNumber, Author, Title, Price, Copies) VALUES (@id, @author, @title, @price, @copies)";
+                    using (var cmd = new SQLiteCommand(sql, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@id", BookNumber);
+                        cmd.Parameters.AddWithValue("@author", Author);
+                        cmd.Parameters.AddWithValue("@title", Title);
+                        cmd.Parameters.AddWithValue("@price", Price);
+                        cmd.Parameters.AddWithValue("@copies", Copies);
+                        cmd.ExecuteNonQuery();
+                    }
                 }
-                Console.WriteLine("  [OK] Book record saved successfully.");
+                Console.WriteLine("  [OK] Book record saved successfully to SQLite.");
             }
             catch (Exception ex)
             {
@@ -49,40 +74,39 @@ namespace Question1
 
         public static void Display()
         {
-            if (!File.Exists("books.dat"))
-            {
-                Console.WriteLine("\n  [INFO] No records found. Database is empty.");
-                return;
-            }
-
             try
             {
-                using (FileStream fs = new FileStream("books.dat", FileMode.Open, FileAccess.Read))
-                using (BinaryReader reader = new BinaryReader(fs))
+                using (var conn = new SQLiteConnection(_connectionString))
                 {
-                    Console.WriteLine("\n=== Booker University Library – Book Inventory ===");
-                    Console.WriteLine($"{"Book No.",-12} {"Title",-40} {"Author",-25} {"Price(KES)",-12} {"Copies",-8}");
-                    Console.WriteLine(new string('-', 97));
-
-                    int count = 0;
-                    while (fs.Position < fs.Length)
+                    conn.Open();
+                    string sql = "SELECT * FROM Books";
+                    using (var cmd = new SQLiteCommand(sql, conn))
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        string author = new string(reader.ReadChars(50)).TrimEnd();
-                        string title = new string(reader.ReadChars(100)).TrimEnd();
-                        string bookNumber = new string(reader.ReadChars(20)).TrimEnd();
-                        double price = reader.ReadDouble();
-                        int copies = reader.ReadInt32();
-
-                        Console.WriteLine($"{bookNumber,-12} {title,-40} {author,-25} {price,-12:F2} {copies,-8}");
-                        count++;
-                    }
-
-                    if (count == 0)
-                        Console.WriteLine("  [INFO] No records found.");
-                    else
-                    {
+                        Console.WriteLine("\n=== Booker University Library – Book Inventory (SQLite) ===");
+                        Console.WriteLine($"{"Book No.",-12} {"Title",-40} {"Author",-25} {"Price(KES)",-12} {"Copies",-8}");
                         Console.WriteLine(new string('-', 97));
-                        Console.WriteLine($"  Total books: {count}");
+
+                        int count = 0;
+                        while (reader.Read())
+                        {
+                            string bookNumber = reader["BookNumber"].ToString()?.Trim() ?? "";
+                            string author = reader["Author"].ToString()?.Trim() ?? "";
+                            string title = reader["Title"].ToString()?.Trim() ?? "";
+                            double price = Convert.ToDouble(reader["Price"]);
+                            int copies = Convert.ToInt32(reader["Copies"]);
+
+                            Console.WriteLine($"{bookNumber,-12} {title,-40} {author,-25} {price,-12:F2} {copies,-8}");
+                            count++;
+                        }
+
+                        if (count == 0)
+                            Console.WriteLine("  [INFO] No records found.");
+                        else
+                        {
+                            Console.WriteLine(new string('-', 97));
+                            Console.WriteLine($"  Total books: {count}");
+                        }
                     }
                 }
             }
@@ -98,6 +122,8 @@ namespace Question1
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            Book.InitializeDatabase();
+
             Console.WriteLine("╔══════════════════════════════════════╗");
             Console.WriteLine("║  Booker University Library System    ║");
             Console.WriteLine("╚══════════════════════════════════════╝");

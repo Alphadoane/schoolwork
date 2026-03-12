@@ -47,15 +47,17 @@ namespace FortuneBS
 
         static void PrintMenu()
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine();
-            Console.WriteLine("  ╔══════════════════════════════════════════════════════════╗");
-            Console.WriteLine("  ║   FORTUNE BUSINESS SYSTEMS LTD – Employee Management    ║");
-            Console.WriteLine("  ╠══════════════════════════════════════════════════════════╣");
-            Console.WriteLine("  ║  1. Add New Employee                                     ║");
-            Console.WriteLine("  ║  2. Display All Employees                                ║");
-            Console.WriteLine("  ║  3. Exit                                                 ║");
-            Console.WriteLine("  ╚══════════════════════════════════════════════════════════╝");
-            Console.Write("  Enter option: ");
+            Console.WriteLine("  ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓");
+            Console.WriteLine("  ┃   FORTUNE BUSINESS SYSTEMS – EMPLOYEE MANAGEMENT       ┃");
+            Console.WriteLine("  ┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫");
+            Console.WriteLine("  ┃  1. 👤 Add New Employee                               ┃");
+            Console.WriteLine("  ┃  2. 📋 Display All Employees                          ┃");
+            Console.WriteLine("  ┃  3. ❌ Exit                                           ┃");
+            Console.WriteLine("  ┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛");
+            Console.ResetColor();
+            Console.Write("  Select Action: ");
         }
 
         static void AddEmployee(EmployeeDatabase db)
