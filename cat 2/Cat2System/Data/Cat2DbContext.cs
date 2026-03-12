@@ -15,6 +15,7 @@ namespace Cat2System.Data
         public DbSet<Unit> Units { get; set; }
         public DbSet<ExamSession> ExamSessions { get; set; }
         public DbSet<Result> Results { get; set; }
+        public DbSet<AppUser> AppUsers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -32,6 +33,7 @@ namespace Cat2System.Data
             modelBuilder.Entity<Student>().HasIndex(s => s.RegistrationNumber).IsUnique();
             modelBuilder.Entity<Unit>().HasIndex(u => u.Code).IsUnique();
             modelBuilder.Entity<ExamSession>().HasIndex(e => new { e.Year, e.Semester }).IsUnique();
+            modelBuilder.Entity<AppUser>().HasIndex(u => u.Username).IsUnique();
         }
     }
 }

@@ -33,6 +33,7 @@ namespace AtmSystem
                 Console.ResetColor();
                 Console.WriteLine("\n  1. 👤 Account Login");
                 Console.WriteLine("  2. 🔐 Admin Login");
+                Console.WriteLine("  3. 🆕 Create Account");
                 Console.WriteLine("  0. ❌ Exit");
                 Console.Write("\n  Select Option: ");
 
@@ -41,6 +42,7 @@ namespace AtmSystem
                 {
                     case "1": UserLogin(db); break;
                     case "2": AdminLogin(db); break;
+                    case "3": CreateAccount(db); break;
                     case "0": exit = true; break;
                     default: Console.WriteLine("\n  ✘ Invalid choice!"); Console.ReadKey(); break;
                 }
@@ -148,6 +150,88 @@ namespace AtmSystem
             }
             else Console.WriteLine("\n  ✘ Invalid amount!");
             Console.ReadKey();
+        }
+
+        static void CreateAccount(AtmDbContext db)
+        {
+            Console.Clear();
+            Console.WriteLine("── CREATE NEW ACCOUNT ──");
+            Console.Write("  Enter Holder Name : ");
+            string name = Console.ReadLine() ?? "";
+            Console.Write("  Enter Initial Deposit: ");
+            if (!decimal.TryParse(Console.ReadLine(), out decimal balance) || balance < 0)
+            {
+                Console.WriteLine("  ✘ Invalid amount!");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.Write("  Set 4-Digit PIN   : ");
+            string pin = Console.ReadLine() ?? "";
+            if (pin.Length != 4 || !pin.All(char.IsDigit))
+            {
+                Console.WriteLine("  ✘ PIN must be 4 digits!");
+                Console.ReadKey();
+                return;
+            }
+
+            string accNo = GenerateAccountNumber(db);
+            string cardNo = GenerateCardNumber(db);
+            string pinHash = HashString(pin);
+
+            var account = new Account
+            {
+                AccountNumber = accNo,
+                HolderName = name,
+                Balance = balance,
+                AccountType = "Savings",
+                Status = "Active"
+            };
+
+            db.Accounts.Add(account);
+            db.SaveChanges();
+
+            var card = new Card
+            {
+                AccountId = account.Id,
+                CardNumber = cardNo,
+                PinHash = pinHash,
+                ExpiryDate = DateTime.Now.AddYears(5).ToString("MM/yy"),
+                IsActive = true
+            };
+
+            db.Cards.Add(card);
+            db.SaveChanges();
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("\n  ✔ Account Created Successfully!");
+            Console.ResetColor();
+            Console.WriteLine($"  Account No: {accNo}");
+            Console.WriteLine($"  Card No   : {cardNo}");
+            Console.WriteLine("\n  Please note your Card Number for login.");
+            Console.ReadKey();
+        }
+
+        static string GenerateAccountNumber(AtmDbContext db)
+        {
+            Random res = new Random();
+            string accNo;
+            do
+            {
+                accNo = res.Next(10000000, 99999999).ToString();
+            } while (db.Accounts.Any(a => a.AccountNumber == accNo));
+            return accNo;
+        }
+
+        static string GenerateCardNumber(AtmDbContext db)
+        {
+            Random res = new Random();
+            string cardNo;
+            do
+            {
+                cardNo = "4242" + res.Next(10000000, 99999999).ToString() + res.Next(1000, 9999).ToString();
+            } while (db.Cards.Any(c => c.CardNumber == cardNo));
+            return cardNo;
         }
 
         static void AdminLogin(AtmDbContext db)

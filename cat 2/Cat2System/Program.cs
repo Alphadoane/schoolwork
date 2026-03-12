@@ -1,6 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using Cat2System.Data;
 using Cat2System.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +8,8 @@ namespace Cat2System
 {
     class Program
     {
+        private static AppUser? CurrentUser = null;
+
         static void Main(string[] args)
         {
             Console.Title = "KCA University - Student Results Portal";
@@ -30,16 +31,31 @@ namespace Cat2System
                 Console.WriteLine("           KCA UNIVERSITY - STUDENT RESULTS PORTAL          ");
                 Console.WriteLine("============================================================");
                 Console.ResetColor();
-                Console.WriteLine("\n  1. 🔍 Search Student & View Result Slip");
-                Console.WriteLine("  2. 📋 View All Students");
-                Console.WriteLine("  0. ❌ Exit");
+
+                if (CurrentUser == null)
+                {
+                    Console.WriteLine("\n  1. 👤 Login");
+                    Console.WriteLine("  2. 📝 Register");
+                    Console.WriteLine("  0. ❌ Exit");
+                }
+                else
+                {
+                    Console.WriteLine($"\n  Logged in as: {CurrentUser.FullName} ({CurrentUser.Role})");
+                    Console.WriteLine("  3. 🔍 Search Student & View Result Slip");
+                    Console.WriteLine("  4. 📋 View All Students");
+                    Console.WriteLine("  9. ⬅️ Logout");
+                    Console.WriteLine("  0. ❌ Exit");
+                }
                 Console.Write("\n  Select Option: ");
 
                 string choice = Console.ReadLine() ?? "";
                 switch (choice)
                 {
-                    case "1": SearchStudent(db); break;
-                    case "2": ViewAllStudents(db); break;
+                    case "1": if (CurrentUser == null) Login(db); break;
+                    case "2": if (CurrentUser == null) Register(db); break;
+                    case "3": if (CurrentUser != null) SearchStudent(db); break;
+                    case "4": if (CurrentUser != null) ViewAllStudents(db); break;
+                    case "9": CurrentUser = null; break;
                     case "0": exit = true; break;
                     default: Console.WriteLine("\n  ✘ Invalid choice!"); Console.ReadKey(); break;
                 }
@@ -163,6 +179,101 @@ namespace Cat2System
             {
                 "A" => 4.0, "B+" => 3.5, "B" => 3.0, "C+" => 2.5, "C" => 2.0, "D+" => 1.5, "D" => 1.0, _ => 0.0
             };
+        }
+
+        static void Login(Cat2DbContext db)
+        {
+            Console.Clear();
+            Console.WriteLine("── USER LOGIN ──");
+            Console.Write("  Username: ");
+            string username = Console.ReadLine() ?? "";
+            Console.Write("  Password: ");
+            string password = ReadPassword();
+
+            string passHash = HashString(password);
+            var user = db.AppUsers.FirstOrDefault(u => u.Username == username && u.PasswordHash == passHash);
+
+            if (user != null)
+            {
+                CurrentUser = user;
+                Console.WriteLine($"\n  ✔ Welcome, {user.FullName}!");
+            }
+            else
+            {
+                Console.WriteLine("\n  ✘ Invalid credentials!");
+            }
+            Console.ReadKey();
+        }
+
+        static void Register(Cat2DbContext db)
+        {
+            Console.Clear();
+            Console.WriteLine("── USER REGISTRATION ──");
+            Console.Write("  Full Name: ");
+            string name = Console.ReadLine() ?? "";
+            Console.Write("  Username : ");
+            string username = Console.ReadLine() ?? "";
+
+            if (db.AppUsers.Any(u => u.Username == username))
+            {
+                Console.WriteLine("\n  ✘ Username already exists!");
+                Console.ReadKey();
+                return;
+            }
+
+            Console.Write("  Password : ");
+            string password = ReadPassword();
+
+            db.AppUsers.Add(new AppUser
+            {
+                FullName = name,
+                Username = username,
+                PasswordHash = HashString(password),
+                Role = "Student"
+            });
+            db.SaveChanges();
+
+            Console.WriteLine("\n  ✔ Registration successful! You can now login.");
+            Console.ReadKey();
+        }
+
+        static string HashString(string input)
+        {
+            using (SHA256 sha256Hash = SHA256.Create())
+            {
+                byte[] bytes = sha256Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+                StringBuilder builder = new StringBuilder();
+                foreach (var b in bytes) builder.Append(b.ToString("x2"));
+                return builder.ToString();
+            }
+        }
+
+        static string ReadPassword()
+        {
+            string pass = "";
+            do
+            {
+                ConsoleKeyInfo key = Console.ReadKey(true);
+                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                {
+                    pass += key.KeyChar;
+                    Console.Write("*");
+                }
+                else
+                {
+                    if (key.Key == ConsoleKey.Backspace && pass.Length > 0)
+                    {
+                        pass = pass.Substring(0, (pass.Length - 1));
+                        Console.Write("\b \b");
+                    }
+                    else if (key.Key == ConsoleKey.Enter)
+                    {
+                        break;
+                    }
+                }
+            } while (true);
+            Console.WriteLine();
+            return pass;
         }
     }
 }
