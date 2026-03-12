@@ -12,9 +12,10 @@ namespace EVMS
         private readonly string _dbPath;
         private readonly string _connectionString;
 
-        public VoterDatabase(string dbPath = "voters.db")
+        public VoterDatabase(string dbName = "voters.db")
         {
-            _dbPath = dbPath;
+            // Ensure we use an absolute path relative to the executable's location
+            _dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbName);
             _connectionString = "Data Source=" + _dbPath + ";Version=3;";
             InitializeDatabase();
         }

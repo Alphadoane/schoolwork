@@ -21,40 +21,43 @@ do {
     switch ($choice) {
         "1" {
             Write-Host "`nLaunching Question 1 (EVMS)..." -ForegroundColor Yellow
-            $path = "$root\assn2\Question1\bin\Debug\Question1_EVMS.exe"
-            if (Test-Path $path) {
-                # Launch DB Explorer in background
-                $dbPath = Join-Path $root "assn2\voters.db"
+            $exePath = "$root\assn2\Question1\bin\Debug\Question1_EVMS.exe"
+            $workDir = "$root\assn2\Question1\bin\Debug"
+            if (Test-Path $exePath) {
+                # Launch DB Explorer in background (pointing to the actual DB file used by the EXE)
+                $dbPath = Join-Path $workDir "voters.db"
                 Start-Job -ScriptBlock { param($r, $p) & "$r\Launch-DBExplorer.ps1" -DbPath $p } -ArgumentList $root, $dbPath | Out-Null
-                Start-Process $path -Wait
+                Start-Process $exePath -WorkingDirectory $workDir -Wait
             } else {
-                Write-Host "Error: Executable not found at $path" -ForegroundColor Red
+                Write-Host "Error: Executable not found at $exePath" -ForegroundColor Red
                 Pause
             }
         }
         "2" {
             Write-Host "`nLaunching Question 2 (Bonga Points)..." -ForegroundColor Yellow
-            $path = "$root\assn2\Question2\bin\Debug\Question2_BongaPoints.exe"
-            if (Test-Path $path) {
+            $exePath = "$root\assn2\Question2\bin\Debug\Question2_BongaPoints.exe"
+            $workDir = "$root\assn2\Question2\bin\Debug"
+            if (Test-Path $exePath) {
                 # Launch DB Explorer in background
-                $dbPath = Join-Path $root "assn2\subscribers.db"
+                $dbPath = Join-Path $workDir "subscribers.db"
                 Start-Job -ScriptBlock { param($r, $p) & "$r\Launch-DBExplorer.ps1" -DbPath $p } -ArgumentList $root, $dbPath | Out-Null
-                Start-Process $path -Wait
+                Start-Process $exePath -WorkingDirectory $workDir -Wait
             } else {
-                Write-Host "Error: Executable not found at $path" -ForegroundColor Red
+                Write-Host "Error: Executable not found at $exePath" -ForegroundColor Red
                 Pause
             }
         }
         "3" {
             Write-Host "`nLaunching Question 3 (Fortune BS)..." -ForegroundColor Yellow
-            $path = "$root\assn2\Question3\bin\Debug\Question3_FortuneBS.exe"
-            if (Test-Path $path) {
+            $exePath = "$root\assn2\Question3\bin\Debug\Question3_FortuneBS.exe"
+            $workDir = "$root\assn2\Question3\bin\Debug"
+            if (Test-Path $exePath) {
                 # Launch DB Explorer in background
-                $dbPath = Join-Path $root "assn2\employees.db"
+                $dbPath = Join-Path $workDir "employees.db"
                 Start-Job -ScriptBlock { param($r, $p) & "$r\Launch-DBExplorer.ps1" -DbPath $p } -ArgumentList $root, $dbPath | Out-Null
-                Start-Process $path -Wait
+                Start-Process $exePath -WorkingDirectory $workDir -Wait
             } else {
-                Write-Host "Error: Executable not found at $path" -ForegroundColor Red
+                Write-Host "Error: Executable not found at $exePath" -ForegroundColor Red
                 Pause
             }
         }

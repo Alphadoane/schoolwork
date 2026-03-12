@@ -1,5 +1,6 @@
 using System;
 using System.Data.SQLite;
+using System.IO;
 
 namespace BongaPoints
 {
@@ -10,8 +11,9 @@ namespace BongaPoints
     {
         private readonly string _connectionString;
 
-        public SubscriberDatabase(string dbPath = "subscribers.db")
+        public SubscriberDatabase(string dbName = "subscribers.db")
         {
+            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbName);
             _connectionString = "Data Source=" + dbPath + ";Version=3;";
             InitializeDatabase();
         }

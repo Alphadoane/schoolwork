@@ -1,5 +1,6 @@
 using System;
 using System.Data.SQLite;
+using System.IO;
 
 namespace FortuneBS
 {
@@ -10,8 +11,9 @@ namespace FortuneBS
     {
         private readonly string _connectionString;
 
-        public EmployeeDatabase(string dbPath = "employees.db")
+        public EmployeeDatabase(string dbName = "employees.db")
         {
+            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dbName);
             _connectionString = "Data Source=" + dbPath + ";Version=3;";
             InitializeDatabase();
         }
