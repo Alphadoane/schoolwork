@@ -1,7 +1,7 @@
 $env:PATH += ";$env:USERPROFILE\.dotnet"
-Write-Host "============================================================" -ForegroundColor Green
-Write-Host "  ATM Management System (C#) - Launching (PowerShell)..." -ForegroundColor Green
-Write-Host "============================================================" -ForegroundColor Green
+Write-Host "============================================================" -ForegroundColor Cyan
+Write-Host "  ATM Management System (C# Console) - Launching..." -ForegroundColor Cyan
+Write-Host "============================================================" -ForegroundColor Cyan
 Write-Host ""
 
 $root = Split-Path -Parent $MyInvocation.MyCommand.Definition
@@ -13,23 +13,12 @@ if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
-Write-Host "Starting ASP.NET Core server in a new window..." -ForegroundColor Cyan
-Start-Process powershell.exe -ArgumentList "-NoExit", "-Command", "Set-Location '$projectPath'; dotnet run --urls=http://localhost:5000"
+Write-Host "Compiling and running console application..." -ForegroundColor Yellow
+$dbPath = Join-Path $projectPath "bin\Debug\net10.0\atm.db"
 
-Write-Host "Waiting for server to initialize..." -ForegroundColor Cyan
-Start-Sleep -Seconds 8
+# Launch DB Explorer in background
+Start-Job -ScriptBlock { param($r, $p) & "$r\Launch-DBExplorer.ps1" -DbPath $p } -ArgumentList $root, $dbPath | Out-Null
 
-# Launch DB Explorer after server initialization to ensure DB file is created
-if (Test-Path $dbPath) { & "$root\Launch-DBExplorer.ps1" -DbPath $dbPath }
-
-Write-Host "Opening browser..." -ForegroundColor Cyan
-Start-Process "http://localhost:5000"
-
-Write-Host ""
-Write-Host "============================================================"
-Write-Host "  Server is running in a separate PowerShell window."
-Write-Host "  You can access the system at http://localhost:5000"
-Write-Host "============================================================"
-Write-Host ""
-Pause
-
+# Run the app
+Set-Location $projectPath
+dotnet run --project .

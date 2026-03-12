@@ -11,12 +11,9 @@ namespace AtmSystem.Data
 {
     public static class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void Initialize(AtmDbContext context)
         {
-            using (var context = new AtmDbContext(
-                serviceProvider.GetRequiredService<DbContextOptions<AtmDbContext>>()))
-            {
-                context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
                 if (context.Accounts.Any())
                 {
@@ -41,7 +38,6 @@ namespace AtmSystem.Data
                 context.AtmMachines.Add(new ATMMachine { MachineId = "ATM001", Location = "Main Campus", CashAvailable = 1000000, Status = "Online" });
 
                 context.SaveChanges();
-            }
         }
 
         private static string HashPin(string pin)

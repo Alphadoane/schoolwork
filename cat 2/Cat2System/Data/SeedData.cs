@@ -9,12 +9,9 @@ namespace Cat2System.Data
 {
     public static class SeedData
     {
-        public static void Initialize(IServiceProvider serviceProvider)
+        public static void Initialize(Cat2DbContext context)
         {
-            using (var context = new Cat2DbContext(
-                serviceProvider.GetRequiredService<DbContextOptions<Cat2DbContext>>()))
-            {
-                context.Database.EnsureCreated();
+            context.Database.EnsureCreated();
 
                 if (context.Faculties.Any()) return;
 
@@ -48,7 +45,6 @@ namespace Cat2System.Data
 
                 context.Results.Add(new Result { StudentId = student.Id, UnitId = unit.Id, ExamSessionId = session.Id, CatScore = 25, ExamScore = 65 });
                 context.SaveChanges();
-            }
         }
     }
 }
